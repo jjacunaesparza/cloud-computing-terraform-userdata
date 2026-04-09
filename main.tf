@@ -23,14 +23,7 @@ resource "aws_instance" "webserver" {
   associate_public_ip_address = true
   subnet_id = module.vpc.public_subnets[0]
   vpc_security_group_ids = [ aws_security_group.webserver.id ]
-  user_data = <<-EOF
-              #! /bin/bash
-              sudo apt-get update
-              sudo apt-get install -y apache2
-              sudo systemctl start apache2
-              sudo systemctl enabled apache2
-              echo "<h1>Ejecutando apache2</h1>" | sudo tee /var/www/html/index.html
-              EOF
+  user_data = "${file("apache-install.sh")}"
   tags = {
     Name = "webserver"
   }
